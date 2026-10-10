@@ -1,5 +1,9 @@
 {
   "rewrites": [
-    { "source": "/contact", "destination": "/index.html" }
+    { "source": "/contact", "destination": "/index.html" },
+    { "source": "/signin", "destination": "/index.html" },
+    { "source": "/signup", "destination": "/index.html" },
+    { "source": "/profile", "destination": "/index.html" },
+    { "source": "/creator/:path*", "destination": "/index.html" }
   ]
 }

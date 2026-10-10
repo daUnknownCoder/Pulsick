@@ -1,0 +1,1 @@
+.featured-ribbon { position: absolute; top: 0; left: 0; z-index: 2; display: grid; place-items: center; width: 30px; height: 31px; color: #fff; background: var(--ribbon); clip-path: polygon(0 0,100% 0,100% 78%,50% 100%,0 78%); }

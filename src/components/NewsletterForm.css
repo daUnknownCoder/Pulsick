@@ -1,0 +1,8 @@
+.newsletter h2 { margin: 25px 0 9px; color: var(--text); font-size: 17px; line-height: 1.2; }
+.newsletter p { max-width: 170px; margin: 0 0 12px; color: var(--text-muted); font-size: 10px; line-height: 1.4; }
+.newsletter form { display: grid; gap: 8px; }
+.newsletter label { display: flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px; color: var(--text-muted); border: 1px solid var(--border); border-radius: var(--radius-pill); background: var(--surface); }
+.newsletter input { width: 100%; color: var(--text); border: 0; outline: 0; background: transparent; font-size: 10px; }
+.newsletter button { height: 28px; color: #fff; border: 0; border-radius: var(--radius-pill); background: var(--accent); font-size: 10px; cursor: pointer; }
+.newsletter button:hover { background: var(--accent-hover); }
+.form-error { display: block; margin-top: 8px; color: #f08181; font-size: 10px; }

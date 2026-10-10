@@ -1,0 +1,21 @@
+.micro-slats {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.global-background {
+  position: fixed !important;
+  inset: 0;
+  z-index: 0 !important;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.micro-slats canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

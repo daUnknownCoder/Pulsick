@@ -1,0 +1,1 @@
+* { box-sizing:border-box; } html,body,#root { min-width:320px; min-height:100%; margin:0; background:var(--bg); transition:background-color .2s ease,color .2s ease; } a { color:inherit; text-decoration:none; } button,input { font:inherit; } button:focus-visible,a:focus-visible,input:focus-visible { outline:2px solid #8179ff; outline-offset:3px; }

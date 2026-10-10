@@ -1,0 +1,2 @@
+.skeleton-card { height: 280px; border-radius: var(--radius-img); background: linear-gradient(110deg,#1b1b1f 8%,#25252a 18%,#1b1b1f 33%); background-size: 200% 100%; animation: shimmer 1.3s linear infinite; }
+@keyframes shimmer { to { background-position-x: -200%; } }

@@ -1,0 +1,24 @@
+.near-me-page { min-height:calc(100vh - 68px); padding:44px clamp(18px,5vw,72px) 90px; }
+.near-me-intro { max-width:700px; margin:0 auto 28px; text-align:center; }
+.near-me-intro .eyebrow { margin:0 0 8px; color:var(--accent); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; }
+.near-me-intro h1 { margin:0; font-size:clamp(40px,7vw,72px); letter-spacing:-.07em; }
+.near-me-intro p { margin:12px 0 18px; color:var(--text-muted); font-size:14px; }
+.near-me-intro button { display:inline-flex; align-items:center; gap:7px; border:0; border-radius:999px; padding:10px 15px; background:var(--accent); color:#fff; cursor:pointer; font-size:11px; font-weight:700; }
+.near-me-intro small { display:block; margin-top:10px; color:var(--text-muted); font-size:10px; }
+.near-me-toolbar { display:flex; align-items:center; justify-content:space-between; gap:20px; max-width:1100px; margin:0 auto 18px; padding:13px 16px; border:1px solid var(--border); border-radius:16px; background:color-mix(in srgb,var(--surface) 86%,transparent); color:var(--text-muted); font-size:11px; }
+.near-me-toolbar label { display:flex; align-items:center; gap:8px; flex:1; }
+.near-me-toolbar strong { color:var(--text); }
+.near-me-toolbar input { width:min(260px,35vw); accent-color:var(--accent); }
+.near-me-layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(300px,.8fr); gap:20px; max-width:1100px; margin:auto; }
+.creator-map { position:relative; min-height:560px; overflow:hidden; border:1px solid var(--border); border-radius:24px; background:linear-gradient(135deg,#d9d8ed,#c6dbe0); box-shadow:0 18px 50px rgba(35,40,80,.12); }
+.creator-map::before,.creator-map::after { position:absolute; content:""; border:1px solid rgba(81,72,232,.14); border-radius:48%; transform:rotate(-20deg); }
+.creator-map::before { inset:10% 20%; }.creator-map::after { inset:24% 8%; transform:rotate(25deg); }
+.map-roads { position:absolute; background:rgba(255,255,255,.45); transform-origin:left center; }
+.map-roads-one { top:48%; left:-10%; width:125%; height:24px; transform:rotate(-24deg); }.map-roads-two { top:10%; left:56%; width:22px; height:115%; transform:rotate(19deg); }
+.map-center { position:absolute; z-index:2; display:grid; place-items:center; width:32px; height:32px; transform:translate(-50%,-50%); border:4px solid rgba(255,255,255,.8); border-radius:50%; background:var(--accent); color:#fff; box-shadow:0 0 0 10px rgba(81,72,232,.16); }
+.map-marker { position:absolute; z-index:3; display:grid; place-items:center; width:30px; height:30px; transform:translate(-50%,-50%); color:var(--accent); filter:drop-shadow(0 4px 5px rgba(20,20,40,.2)); cursor:pointer; }.map-marker i { position:absolute; top:3px; color:#fff; font-size:8px; font-style:normal; font-weight:800; }.map-label { position:absolute; z-index:2; padding:8px 10px; border-radius:999px; background:rgba(255,255,255,.7); color:#41404d; font-size:10px; backdrop-filter:blur(6px); }.map-label-top { top:18px; left:18px; }.map-label-bottom { right:18px; bottom:18px; }
+.nearby-list { min-width:0; padding:18px; border:1px solid var(--border); border-radius:24px; background:color-mix(in srgb,var(--surface) 88%,transparent); }
+.nearby-list-head { display:flex; justify-content:space-between; gap:10px; margin-bottom:12px; }.nearby-list-head strong { font-size:15px; }.nearby-list-head span { color:var(--text-muted); font-size:10px; }
+.nearby-card { display:flex; align-items:center; gap:10px; padding:12px 0; border-top:1px solid var(--border); }.nearby-card img { width:38px; height:38px; border-radius:50%; object-fit:cover; }.nearby-card > div { display:grid; gap:3px; flex:1; min-width:0; }.nearby-card strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }.nearby-card span,.nearby-card small { overflow:hidden; color:var(--text-muted); text-overflow:ellipsis; white-space:nowrap; font-size:10px; }.nearby-card button { border:1px solid var(--border); border-radius:999px; padding:6px 9px; background:transparent; color:var(--accent); cursor:pointer; font-size:10px; }
+@media (max-width:800px) { .near-me-layout { grid-template-columns:1fr; }.creator-map { min-height:390px; }.nearby-list { order:-1; } }
+@media (max-width:639px) { .near-me-page { padding:28px 14px 92px; }.near-me-toolbar { align-items:flex-start; flex-direction:column; gap:10px; }.near-me-toolbar input { width:100%; }.near-me-toolbar label { width:100%; flex-wrap:wrap; }.near-me-toolbar label input { flex-basis:100%; }.creator-map { min-height:330px; }.nearby-list { padding:14px; } }

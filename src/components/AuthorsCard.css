@@ -1,0 +1,8 @@
+.authors-card { overflow: hidden; border: 1px solid var(--border); border-radius: 13px; background: color-mix(in srgb, var(--surface) 60%, transparent); }
+.author-row { display: flex; align-items: center; gap: 9px; padding: 11px 10px; }
+.author-row + .author-row { border-top: 1px solid var(--border); }
+.author-row img { width: 29px; height: 29px; object-fit: cover; border-radius: 50%; }
+.author-row span { display: grid; flex: 1; gap: 2px; }
+.author-row strong { color: var(--text); font-size: 10px; }
+.author-row small { color: var(--text-muted); font-size: 9px; }
+.author-row button { display: grid; place-items: center; width: 18px; height: 18px; color: #aaa; border: 1px solid #555; border-radius: 50%; background: transparent; }

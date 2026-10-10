@@ -1,7 +1,5 @@
 import { useEffect } from "react";
-import relabsPage from "../components/relabs.html?url";
-
 export default function ContactRedirectPage() {
-  useEffect(() => { window.location.replace(relabsPage); }, []);
+  useEffect(() => { window.location.replace("/relabs.html"); }, []);
   return null;
 }

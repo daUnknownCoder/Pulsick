@@ -28,7 +28,11 @@ export default function CreatorsPage() {
   useEffect(() => {
     if (!isSupabaseReady()) return;
     getCreatorDirectory()
-      .then((remoteCreators) => { if (remoteCreators.length) setCreators(remoteCreators); })
+      .then((remoteCreators) => {
+        if (!remoteCreators.length) return;
+        const byId = new Map(remoteCreators.map((creator) => [creator.id, creator]));
+        setCreators(fallbackCreators.map((creator) => ({ ...creator, ...(byId.get(creator.id) || {}) })));
+      })
       .catch((error) => console.warn("Unable to load the creator directory.", error));
   }, []);
 

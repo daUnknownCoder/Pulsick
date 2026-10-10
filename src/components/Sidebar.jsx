@@ -12,7 +12,7 @@ export default function Sidebar() {
   const { role, setRole } = useRole();
   const currentUrl = `${location.pathname}${location.search}`;
   const isCreator = role === "creator";
-  const menu = [["Home", "/", navigationPills[0][2]], ["Featured", "/?category=Featured", navigationPills[1][2]], ["Categories", "/categories", navigationPills[2][2]], [isCreator ? "Brands" : "Creators", isCreator ? "/brands" : "/creators", navigationPills[3][2]], ["Near Me", "/near-me", navigationPills[4][2]]];
+  const menu = [["Home", "/", navigationPills[0][2]], ["Featured", "/?category=Featured", navigationPills[1][2]], ["Categories", "/categories", navigationPills[2][2]], [isCreator ? "Brands" : "Creators", isCreator ? "/brands" : "/creators", navigationPills[3][2]], ["Near Me", "/near-me", navigationPills[4][2]], ["Contact Us", "/contact", navigationPills[7][2]]];
   const switchRole = (nextRole) => {
     setRole(nextRole);
     if (nextRole === "user" && location.pathname === "/brands") navigate("/creators");

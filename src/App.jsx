@@ -10,10 +10,21 @@ import BrandsPage from "./pages/BrandsPage";
 import { RoleContext } from "./hooks/useRole";
 import FooterPage from "./pages/FooterPage";
 import NearMePage from "./pages/NearMePage";
+import AuthPage from "./pages/AuthPage";
+import ProfilePage from "./pages/ProfilePage";
+import ContactRedirectPage from "./pages/ContactRedirectPage";
+import { AuthContext } from "./hooks/useAuth";
+import { getCurrentSession, subscribeToAuth } from "./api/supabaseApi";
 
 export default function App() {
   const [theme, setTheme] = useState("light");
   const [role, setRole] = useState(() => localStorage.getItem("pulsick-role") || localStorage.getItem("berta-role") || "user");
+  const [session, setSession] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  useEffect(() => {
+    getCurrentSession().then(setSession).catch((error) => console.error("Unable to restore Supabase session.", error)).finally(() => setAuthLoading(false));
+    return subscribeToAuth(setSession);
+  }, []);
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
@@ -24,6 +35,7 @@ export default function App() {
   const roleValue = useMemo(() => ({ role, setRole: (nextRole) => { localStorage.setItem("pulsick-role", nextRole); setRole(nextRole); } }), [role]);
 
   return (
+    <AuthContext.Provider value={{ session, loading: authLoading }}>
     <ThemeContext.Provider value={themeValue}>
       <RoleContext.Provider value={roleValue}>
       <ClickSpark
@@ -45,11 +57,16 @@ export default function App() {
             <Route path="/career" element={<FooterPage />} />
             <Route path="/terms" element={<FooterPage />} />
             <Route path="/privacy" element={<FooterPage />} />
+            <Route path="/signin" element={<AuthPage mode="signin" />} />
+            <Route path="/signup" element={<AuthPage mode="signup" />} />
+            <Route path="/profile" element={session ? <ProfilePage session={session} /> : <AuthPage mode="signin" />} />
+            <Route path="/contact" element={<ContactRedirectPage />} />
             <Route path="*" element={<HomePage />} />
           </Routes>
         </BrowserRouter>
       </ClickSpark>
       </RoleContext.Provider>
     </ThemeContext.Provider>
+    </AuthContext.Provider>
   );
 }

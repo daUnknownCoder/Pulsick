@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import useTheme from "../hooks/useTheme";
 import { getCreators } from "../api/videosApi";
 import { getConversation, saveMessage } from "../api/chatApi";
@@ -8,10 +9,15 @@ import BottomNav from "../components/BottomNav";
 import ProfileCard from "../components/ProfileCard";
 import "./creators.css";
 import profileIconUrl from "./icon.png";
+import useAuth from "../hooks/useAuth";
+import { getCreatorDirectory, getPersistentConversation, isSupabaseReady, sendPersistentMessage, subscribeToMessages } from "../api/supabaseApi";
 
 export default function CreatorsPage() {
   const { theme, toggleTheme } = useTheme();
-  const creators = useMemo(() => getCreators(), []);
+  const { session } = useAuth();
+  const fallbackCreators = useMemo(() => getCreators(), []);
+  const [creators, setCreators] = useState(fallbackCreators);
+  const [searchParams] = useSearchParams();
   const [activeCreator, setActiveCreator] = useState(null);
   const [messages, setMessages] = useState([]);
   const [draft, setDraft] = useState("");
@@ -20,11 +26,26 @@ export default function CreatorsPage() {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
+    if (!isSupabaseReady()) return;
+    getCreatorDirectory()
+      .then((remoteCreators) => { if (remoteCreators.length) setCreators(remoteCreators); })
+      .catch((error) => console.warn("Unable to load the creator directory.", error));
+  }, []);
+
+  useEffect(() => {
     if (!activeCreator) return;
-    setMessages(getConversation(activeCreator.id));
+    let isCurrent = true;
+    getPersistentConversation(activeCreator.id, session?.user?.id)
+      .then((remoteMessages) => { if (isCurrent) setMessages(remoteMessages.length ? remoteMessages : getConversation(activeCreator.id)); })
+      .catch(() => { if (isCurrent) setMessages(getConversation(activeCreator.id)); });
     setDraft("");
     setPendingImage(null);
-  }, [activeCreator]);
+    const unsubscribe = subscribeToMessages(activeCreator.id, session?.user?.id, (incoming) => {
+      if (!isCurrent) return;
+      setMessages((current) => current.some((message) => String(message.id) === String(incoming.id)) ? current : [...current, incoming]);
+    });
+    return () => { isCurrent = false; unsubscribe(); };
+  }, [activeCreator, session]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -40,6 +61,10 @@ export default function CreatorsPage() {
   }, [activeCreator]);
 
   const openChat = (creator) => setActiveCreator(creator);
+  useEffect(() => {
+    const requestedCreator = creators.find((creator) => String(creator.id) === searchParams.get("creator"));
+    if (requestedCreator) setActiveCreator(requestedCreator);
+  }, [creators, searchParams]);
 
   const handleImageChange = (event) => {
     const file = event.target.files?.[0];
@@ -51,7 +76,7 @@ export default function CreatorsPage() {
     event.target.value = "";
   };
 
-  const sendMessage = (event) => {
+  const sendMessage = async (event) => {
     event.preventDefault();
     const text = draft.trim();
     if (!text && !pendingImage) return;
@@ -63,7 +88,17 @@ export default function CreatorsPage() {
       imageName: pendingImage?.name || "",
       createdAt: new Date().toISOString(),
     };
-    setMessages(saveMessage(activeCreator.id, message));
+    if (isSupabaseReady() && session?.user?.id) {
+      try {
+        const saved = await sendPersistentMessage(activeCreator.id, session.user.id, message);
+        if (saved) setMessages((current) => current.some((item) => String(item.id) === String(saved.id)) ? current : [...current, saved]);
+      } catch (error) {
+        console.error("Unable to persist message.", error);
+        setMessages(saveMessage(activeCreator.id, message));
+      }
+    } else {
+      setMessages(saveMessage(activeCreator.id, message));
+    }
     setDraft("");
     setPendingImage(null);
   };
@@ -128,7 +163,7 @@ export default function CreatorsPage() {
                 <input value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={`Message ${activeCreator.name}...`} aria-label={`Message ${activeCreator.name}`} />
                 <button className="creator-chat-send" type="submit" aria-label="Send message">↑</button>
               </div>
-              <small>Messages and attachments are saved locally for now.</small>
+              <small>{session ? "Messages are synced to your Supabase account." : "Sign in to sync messages across devices."}</small>
             </form>
           </section>
         </div>

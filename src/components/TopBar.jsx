@@ -1,6 +1,7 @@
 import { Moon, Search, Sun, UserRound } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
 import useRole from "../hooks/useRole";
 import GooeyNav from "./GooeyNav";
 import ElectricLogo from "./ElectricLogo";
@@ -11,6 +12,7 @@ export default function TopBar({ search, onSearch, theme, onToggleTheme }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { role, setRole } = useRole();
+  const { session } = useAuth();
   const switchRole = (nextRole) => {
     setRole(nextRole);
     if (nextRole === "user" && location.pathname === "/brands") navigate("/creators");
@@ -35,6 +37,6 @@ export default function TopBar({ search, onSearch, theme, onToggleTheme }) {
       {theme === "dark" ? <Moon size={13} /> : <Sun size={13} />}
       <span>{theme === "dark" ? "Dark" : "Light"}</span>
     </button>
-    <div className="auth-actions"><Link to="/signin" className="button accent">Sign In</Link><Link to="/signup" className="button accent">Sign Up</Link><Link to="/signin" className="mobile-account" aria-label="Account"><UserRound size={16} /></Link></div>
+    <div className="auth-actions">{session ? <Link to="/profile" className="button accent profile-button"><UserRound size={14} /> Profile</Link> : <><Link to="/signin" className="button accent">Sign In</Link><Link to="/signup" className="button accent">Sign Up</Link></>}<Link to={session ? "/profile" : "/signin"} className="mobile-account" aria-label="Profile"><UserRound size={16} /></Link></div>
   </header>;
 }

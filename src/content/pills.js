@@ -9,7 +9,7 @@ export const navigationPills = [
   ["Near Me", "/near-me", MapPinned],
   ["Video", "/?category=Generative%20Video", PlaySquare],
   ["Membership", "/?category=Creator%20Tools", Users],
-  ["Contact Us", "/?category=AI%20Product", Send],
+  ["Contact Us", "/contact", Send],
 ];
 
 // Edit these footer pills independently from the sidebar layout.

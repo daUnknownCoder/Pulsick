@@ -12,14 +12,14 @@ export async function signIn(email, password) {
   return data;
 }
 
-export async function signUp(email, password, displayName) {
+export async function signUp(email, password, displayName, role = "user") {
   if (!supabase) throw new Error("Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.");
-  const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { display_name: displayName } } });
+  const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { display_name: displayName, role } } });
   if (error) throw error;
   // When email confirmation is on, Supabase returns a user without a session.
   // The database trigger in supabase/schema.sql creates that user's profile safely.
   if (data.user && data.session) {
-    try { await upsertProfile(data.user, displayName); } catch (profileError) { console.warn("Unable to update profile.", profileError); }
+    try { await upsertProfile(data.user, displayName, role); } catch (profileError) { console.warn("Unable to update profile.", profileError); }
   }
   return data;
 }
@@ -44,14 +44,29 @@ export function subscribeToAuth(callback) {
   return () => data.subscription.unsubscribe();
 }
 
-export async function upsertProfile(user, displayName = "") {
+export async function signInWithGoogle() {
+  if (!supabase) throw new Error("Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY.");
+  const { data, error } = await supabase.auth.signInWithOAuth({ provider: "google", options: { redirectTo: `${window.location.origin}/profile` } });
+  if (error) throw error;
+  return data;
+}
+
+export async function upsertProfile(user, displayName = "", role = "") {
   if (!supabase || !user) return null;
   const { data, error } = await supabase.from("profiles").upsert({
     id: user.id,
     display_name: displayName || user.user_metadata?.display_name || user.email?.split("@")[0] || "Pulsick member",
     email: user.email || "",
+    role: role || user.user_metadata?.role || "user",
     updated_at: new Date().toISOString(),
   }).select().single();
+  if (error) throw error;
+  return data;
+}
+
+export async function updateProfile(userId, updates) {
+  if (!supabase || !userId) return null;
+  const { data, error } = await supabase.from("profiles").update({ ...updates, updated_at: new Date().toISOString() }).eq("id", userId).select().single();
   if (error) throw error;
   return data;
 }
@@ -102,4 +117,11 @@ export async function getCreatorDirectory() {
     ...creator,
     avatarUrl: creator.avatar_url,
   }));
+}
+
+export async function getCreator(creatorId) {
+  if (!supabase || !creatorId) return null;
+  const { data, error } = await supabase.from("creators").select("*").eq("id", creatorId).maybeSingle();
+  if (error) throw error;
+  return data ? { ...data, avatarUrl: data.avatar_url } : null;
 }

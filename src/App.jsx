@@ -12,6 +12,7 @@ import FooterPage from "./pages/FooterPage";
 import NearMePage from "./pages/NearMePage";
 import AuthPage from "./pages/AuthPage";
 import ProfilePage from "./pages/ProfilePage";
+import CreatorProfilePage from "./pages/CreatorProfilePage";
 import ContactRedirectPage from "./pages/ContactRedirectPage";
 import { AuthContext } from "./hooks/useAuth";
 import { getCurrentSession, subscribeToAuth } from "./api/supabaseApi";
@@ -60,6 +61,7 @@ export default function App() {
             <Route path="/signin" element={<AuthPage mode="signin" />} />
             <Route path="/signup" element={<AuthPage mode="signup" />} />
             <Route path="/profile" element={session ? <ProfilePage session={session} /> : <AuthPage mode="signin" />} />
+            <Route path="/creator/:creatorId" element={<CreatorProfilePage />} />
             <Route path="/contact" element={<ContactRedirectPage />} />
             <Route path="*" element={<HomePage />} />
           </Routes>
